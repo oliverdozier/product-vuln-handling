@@ -1,0 +1,241 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "https://github.com/oliverdozier/product-vuln-handling/01-sbom-vex/vex-tgw-v1.8",
+  "author": "Oliver Dozier",
+  "timestamp": "2026-10-23T12:00:00Z",
+  "version": 1,
+  "statements": [
+    {
+      "vulnerability": {
+        "name": "CVE-2025-27516"
+      },
+      "products": [
+        {
+          "@id": "pkg:github/oobabooga/text-generation-webui@v1.8",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/jinja2@3.1.2"
+            }
+          ]
+        }
+      ],
+      "status": "affected",
+      "action_statement": "Upgrade jinja2 to 3.1.6 or later. Until then, load models only from trusted publishers and review chat templates in the UI before use.",
+      "status_notes": "Chat and instruction templates are rendered in an ImmutableSandboxedEnvironment (modules/chat.py), and template content is loaded from model metadata (tokenizer.chat_template, modules/models_settings.py). A downloaded model can therefore supply attacker-controlled template content, which is the precondition for this sandbox breakout via the built-in |attr filter."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2024-56326"
+      },
+      "products": [
+        {
+          "@id": "pkg:github/oobabooga/text-generation-webui@v1.8",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/jinja2@3.1.2"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "Exploitation requires an application-defined custom filter that invokes a callable passed into it. The application registers no custom filters or globals on its Jinja environment (only from_string calls in modules/chat.py), so the indirect str.format path cannot be reached. Remediated anyway by the jinja2 3.1.6 upgrade."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2024-56201"
+      },
+      "products": [
+        {
+          "@id": "pkg:github/oobabooga/text-generation-webui@v1.8",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/jinja2@3.1.2"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "impact_statement": "Exploitation requires control of both template content and template filename. Templates are compiled with from_string, which takes no adversary-controlled filename."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2024-22195"
+      },
+      "products": [
+        {
+          "@id": "pkg:github/oobabooga/text-generation-webui@v1.8",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/jinja2@3.1.2"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "The xmlattr filter injection affects HTML output. Rendered templates here become a text prompt sent to the model, not HTML returned to a browser, so the injected attributes have no sink."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2024-34064"
+      },
+      "products": [
+        {
+          "@id": "pkg:github/oobabooga/text-generation-webui@v1.8",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/jinja2@3.1.2"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "Same analysis as CVE-2024-22195: rendered template output is a model prompt, not HTML."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2024-4941"
+      },
+      "products": [
+        {
+          "@id": "pkg:github/oobabooga/text-generation-webui@v1.8",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/gradio@4.26.0"
+            }
+          ]
+        }
+      ],
+      "status": "affected",
+      "action_statement": "Upgrade gradio to 4.31.4 or later. Interim: keep the default localhost binding, avoid --listen and --share, and require --gradio-auth wherever the UI is exposed.",
+      "status_notes": "The UI instantiates a gr.JSON component (modules/ui_chat.py), the component named in the local file inclusion advisory. Exposure depends on deployment: default binding is localhost, but --listen or --share makes the UI reachable by others."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2024-47867"
+      },
+      "products": [
+        {
+          "@id": "pkg:github/oobabooga/text-generation-webui@v1.8",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/gradio@4.26.0"
+            }
+          ]
+        }
+      ],
+      "status": "affected",
+      "action_statement": "Upgrade gradio to 5.0.0 or later. Interim: do not use --share.",
+      "status_notes": "Affects the public share tunnel, which the application exposes through its --share flag. Reachable only when a user enables sharing."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2024-12217"
+      },
+      "products": [
+        {
+          "@id": "pkg:github/oobabooga/text-generation-webui@v1.8",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/gradio@4.26.0"
+            }
+          ]
+        }
+      ],
+      "status": "affected",
+      "action_statement": "Upgrade gradio. Interim on Windows: localhost binding only and --gradio-auth if exposed.",
+      "status_notes": "Path traversal on Windows hosts. The project ships Windows launchers (cmd_windows.bat), so Windows deployments are in scope; Linux and macOS deployments are not."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2024-4253"
+      },
+      "products": [
+        {
+          "@id": "pkg:github/oobabooga/text-generation-webui@v1.8",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/gradio@4.26.0"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_present",
+      "impact_statement": "The advisory describes command injection in a repository CI workflow (test-functions), not in the published package. That code is not present in the installed wheel."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2025-2099"
+      },
+      "products": [
+        {
+          "@id": "pkg:github/oobabooga/text-generation-webui@v1.8",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/transformers@4.41.2"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "The ReDoS is in transformers.testing_utils, a test helper. The application never imports it (no references in the codebase)."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2025-14926"
+      },
+      "products": [
+        {
+          "@id": "pkg:github/oobabooga/text-generation-webui@v1.8",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/transformers@4.41.2"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "Code injection in the SEW convert_config checkpoint-conversion utility. The application loads models through standard loaders and never invokes upstream conversion scripts."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2026-1839"
+      },
+      "products": [
+        {
+          "@id": "pkg:github/oobabooga/text-generation-webui@v1.8",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/transformers@4.41.2"
+            }
+          ]
+        }
+      ],
+      "status": "under_investigation",
+      "status_notes": "The advisory concerns the Trainer class. The application's training tab instantiates transformers.Trainer (modules/training.py). Reachability depends on whether attacker-supplied checkpoints reach the vulnerable path; analysis open."
+    },
+    {
+      "vulnerability": {
+        "name": "CVE-2026-69112"
+      },
+      "products": [
+        {
+          "@id": "pkg:github/oobabooga/text-generation-webui@v1.8",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/accelerate@0.30.1"
+            }
+          ]
+        }
+      ],
+      "status": "under_investigation",
+      "status_notes": "Path traversal in load_checkpoint_in_model. Model loading uses accelerate for device placement, so a malicious model repository may reach this path. Confirming whether the application's loader invokes the vulnerable function."
+    }
+  ]
+}

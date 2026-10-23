@@ -1,0 +1,153 @@
+{
+  "document": {
+    "category": "csaf_security_advisory",
+    "csaf_version": "2.0",
+    "title": "text-generation-webui: Jinja2 sandbox breakout via model-supplied chat templates",
+    "lang": "en",
+    "publisher": {
+      "category": "other",
+      "name": "Oliver Dozier (portfolio exercise)",
+      "namespace": "https://github.com/oliverdozier"
+    },
+    "distribution": {
+      "tlp": {
+        "label": "WHITE"
+      }
+    },
+    "aggregate_severity": {
+      "text": "High"
+    },
+    "notes": [
+      {
+        "category": "legal_disclaimer",
+        "title": "Not an official advisory",
+        "text": "This is an independent portfolio exercise demonstrating CSAF authoring. It is not published by or affiliated with the text-generation-webui project or Pallets."
+      },
+      {
+        "category": "summary",
+        "title": "Summary",
+        "text": "text-generation-webui v1.8 depends on jinja2 3.1.2, which is affected by CVE-2025-27516. The application renders chat templates loaded from model metadata inside Jinja's sandbox, so a malicious model can supply a template that escapes the sandbox and executes arbitrary Python code on the user's machine."
+      }
+    ],
+    "references": [
+      {
+        "category": "external",
+        "summary": "Upstream advisory GHSA-cpwx-vrp4-4pq7",
+        "url": "https://github.com/pallets/jinja/security/advisories/GHSA-cpwx-vrp4-4pq7"
+      },
+      {
+        "category": "external",
+        "summary": "NVD entry",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2025-27516"
+      }
+    ],
+    "tracking": {
+      "id": "OD-SA-2026-001",
+      "status": "final",
+      "version": "1",
+      "initial_release_date": "2026-10-23T12:00:00.000Z",
+      "current_release_date": "2026-10-23T12:00:00.000Z",
+      "revision_history": [
+        {
+          "date": "2026-10-23T12:00:00.000Z",
+          "number": "1",
+          "summary": "Initial release"
+        }
+      ],
+      "generator": {
+        "engine": {
+          "name": "hand-authored",
+          "version": "1.0"
+        }
+      }
+    }
+  },
+  "product_tree": {
+    "branches": [
+      {
+        "category": "vendor",
+        "name": "oobabooga",
+        "branches": [
+          {
+            "category": "product_name",
+            "name": "text-generation-webui",
+            "branches": [
+              {
+                "category": "product_version",
+                "name": "1.8",
+                "product": {
+                  "name": "text-generation-webui 1.8",
+                  "product_id": "CSAFPID-0001",
+                  "product_identification_helper": {
+                    "purl": "pkg:github/oobabooga/text-generation-webui@v1.8"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "vulnerabilities": [
+    {
+      "cve": "CVE-2025-27516",
+      "cwe": {
+        "id": "CWE-1336",
+        "name": "Improper Neutralization of Special Elements Used in a Template Engine"
+      },
+      "title": "Jinja2 sandbox breakout through the attr filter",
+      "notes": [
+        {
+          "category": "description",
+          "text": "An oversight in how the Jinja sandboxed environment interacts with the |attr filter allows an attacker who controls template content to obtain a reference to a string's unsandboxed format method and execute arbitrary Python code. Fixed in jinja2 3.1.6."
+        },
+        {
+          "category": "details",
+          "title": "Product-specific impact",
+          "text": "modules/models_settings.py reads tokenizer.chat_template from model metadata, and modules/chat.py renders it with ImmutableSandboxedEnvironment.from_string. Template content is therefore controlled by whoever published the model."
+        }
+      ],
+      "product_status": {
+        "known_affected": [
+          "CSAFPID-0001"
+        ]
+      },
+      "scores": [
+        {
+          "products": [
+            "CSAFPID-0001"
+          ],
+          "cvss_v3": {
+            "version": "3.1",
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
+            "baseScore": 8.8,
+            "baseSeverity": "HIGH"
+          }
+        }
+      ],
+      "threats": [
+        {
+          "category": "exploit_status",
+          "details": "No known exploitation in the wild of this product at time of writing."
+        }
+      ],
+      "remediations": [
+        {
+          "category": "vendor_fix",
+          "details": "Upgrade jinja2 to 3.1.6 or later (pin jinja2>=3.1.6 in requirements).",
+          "product_ids": [
+            "CSAFPID-0001"
+          ]
+        },
+        {
+          "category": "mitigation",
+          "details": "Load models only from trusted publishers, and review the chat template shown in the UI before generating text with a new model.",
+          "product_ids": [
+            "CSAFPID-0001"
+          ]
+        }
+      ]
+    }
+  ]
+}
