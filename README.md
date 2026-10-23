@@ -6,7 +6,7 @@ Hands-on work samples for product vulnerability management: moving from raw scan
 
 | Project | What it demonstrates | Standards |
 |---|---|---|
-| [01: SBOM, triage, and VEX](#project-1-sbom-vulnerability-triage-and-vex) | Generating an SBOM, scanning it, and triaging 65 advisories by real reachability in the product's code, not severity score alone | CycloneDX, OpenVEX, CVSS |
+| [01: SBOM, triage, and VEX](#project-1-sbom-vulnerability-triage-and-vex) | Generating an SBOM, scanning it (65 advisories), and triaging findings by real reachability in the product's code, not severity score alone | CycloneDX, OpenVEX, CVSS |
 | [02: CSAF advisory and bulletin](#project-2-csaf-20-advisory-and-security-bulletin) | Turning the top finding into a schema-valid CSAF 2.0 advisory and a customer-facing security bulletin | CSAF 2.0, CWE, CVSS v3.1 |
 | 03: Threat model of an LLM inference service | *In progress* | STRIDE, CWE |
 | 04: AI-assisted VEX justification drafting | *In progress* | OpenVEX, LLM tooling |
@@ -21,10 +21,24 @@ Hands-on work samples for product vulnerability management: moving from raw scan
 | `vex.openvex.json` | Project 1: triage decisions in OpenVEX format |
 | `OD-SA-2026-001.csaf.json` | Project 2: CSAF 2.0 security advisory |
 | `security-bulletin.md` | Project 2: customer-facing security bulletin |
+| `run_lab.py` | Live lab: runs the full workflow end to end |
+| `requirements-lab.txt` | Python packages the lab needs |
 
 ## Tooling and approach
 
 Built with `cyclonedx-py`, `pip-audit`, and direct source review of the target. AI assistance (Claude) was used to speed up drafting and tooling. Every triage decision is tied to specific evidence in the target's source code so it can be checked independently.
+
+## Run the lab live
+
+The whole workflow is reproducible with one command. It clones the target, builds the SBOM, scans it, shows the code evidence behind each triage decision, applies the VEX, verifies the fix by rescanning, and validates the CSAF advisory.
+
+**In your browser (no setup):** click **Code → Codespaces → Create codespace on main**, then in the terminal run:
+
+```
+pip install -r requirements-lab.txt && python run_lab.py
+```
+
+**Locally:** same command, with Python 3.10+ and git installed. Add `--auto` to run without pausing between steps.
 
 ---
 
@@ -48,7 +62,7 @@ A scanner gives you a list of CVEs. It doesn't tell you which ones matter to thi
 ### Results
 
 - **65 unique advisories** across 4 packages (gradio 33, transformers 26, jinja2 5, accelerate 1). The raw scan reports 115 because several advisory feeds list the same issue.
-- **13 triaged in depth:** 5 affected, 6 not affected, 2 under investigation.
+- **13 triaged in depth:** 4 affected, 7 not affected, 2 under investigation.
 
 ### Key finding
 

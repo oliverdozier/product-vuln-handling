@@ -1,0 +1,4 @@
+pip-audit==2.10.1
+cyclonedx-bom==7.5.0
+rich>=13
+jsonschema>=4
